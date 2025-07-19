@@ -148,14 +148,14 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         """
         # TODO: update the policy and return the loss
         self.optimizer.zero_grad()
-        actions_pred = self.forward(observations)
-        loss = F.mse_loss(actions_pred, actions)
+        actions_pred = self.forward(ptu.from_numpy(observations))
+        loss = F.mse_loss(actions_pred, ptu.from_numpy(actions))
         loss.backward()
         self.optimizer.step()
 
         return {
             # You can add extra logging information here, but keep this line
             'Training Loss': ptu.to_numpy(loss),
-            'Mean': ptu.to_numpy(self.mean_net[0].weight),
-            'LogStd': ptu.to_numpy(self.logstd),
+            # 'Mean': ptu.to_numpy(self.mean_net[0].weight),
+            # 'LogStd': ptu.to_numpy(self.logstd),
         }
